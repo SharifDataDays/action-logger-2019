@@ -15,14 +15,14 @@ mongo_collection = None
 
 @app.route('/submit_action', methods=['POST'])
 def handle_submission():
-    request_data = request.form
-
+    request_data = request.get_json()
     for field in config.SUBMISSION_MANDATORY_REQUEST_FIELDS:
+        print(request_data)
         if field not in request_data:
             error_message = 'malformed post request data, excepting field {}'.format(field)
             logger.log_error(error_message)
             return error_message, 400
-
+    print(ActionTypes.list_types())
     if request_data['action_type'] not in ActionTypes.list_types():
         error_message = 'malformed post request data, invalid action type {}'.format(request_data['action_type'])
         logger.log_error(error_message)
@@ -39,18 +39,16 @@ def handle_submission():
 
 @app.route('/query', methods=['GET'])
 def handle_query():
-    request_data = request.form
+    request_data = request.get_json()
 
-    # filter=filter, projection=projection, skip=skip, limit=limit
-
-    filter_criteria = json.loads(request_data['filter_criteria']) if 'filter_criteria' in request_data else None
-    projection = json.loads(request_data['projection']) if 'projection' in request_data else None
-    skip = int(request_data['skip']) if 'skip' in request_data else None
+    filter_criteria = request_data['filter_criteria'] if 'filter_criteria' in request_data else None
+    projection = request_data['projection'] if 'projection' in request_data else None
+    skip = int(request_data['skip']) if 'skip' in request_data else 0
     limit = int(request_data['limit']) if 'limit' in request_data else None
 
     results = get_results(filter_criteria, projection, skip, limit)
 
-    return results, 200
+    return json.dumps(results), 200
 
 
 def runserver(port=config.SERVER_PORT):

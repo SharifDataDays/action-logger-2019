@@ -18,8 +18,11 @@ def submit_action(request_data):
     return result.acknowledged
 
 
-def get_results(filter_criteria=None, projection=None, skip=None, limit=None):
+def get_results(filter_criteria=None, projection=None, skip=0, limit=None):
     if limit is None or limit > config.MONGO_MAX_RETRIEVAL:
         limit = config.MONGO_MAX_RETRIEVAL
     results = list(__mongo_collection.find(filter=filter_criteria, projection=projection, skip=skip, limit=limit))
+
+    for result in results:
+        result.pop('_id')
     return results
