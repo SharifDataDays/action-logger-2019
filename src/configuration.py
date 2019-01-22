@@ -1,7 +1,6 @@
 SERVER_HOST = '0.0.0.0'
 SERVER_PORT = 9099
 
-
 MONGO_HOST = 'localhost'
 MONGO_PORT = 27017
 MONGO_DATABASE = 'DATA_DAYS'
@@ -9,6 +8,3 @@ MONGO_COLLECTION = 'ACTION_LOG'
 MONGO_MAX_RETRIEVAL = 100
 
 SUBMISSION_MANDATORY_REQUEST_FIELDS = ['action_info', 'action_info', 'timestamp', 'target_id']
-
-
-
